@@ -174,15 +174,15 @@ async function, disconnects and unpairs the specified devices
 
 * Events of BluetoothManager module
 
-| Name/KEY | DESCRIPTION |
-|---|---|
-| EVENT_DEVICE_ALREADY_PAIRED | Emits the devices array already paired |
-| EVENT_DEVICE_DISCOVER_DONE | Emits when the scan done |
-| EVENT_DEVICE_FOUND | Emits when device found during scan |
-| EVENT_CONNECTION_LOST | Emits when device connection lost |
-| EVENT_UNABLE_CONNECT | Emits when error occurs while trying to connect device |
-| EVENT_CONNECTED | Emits when device connected |
-| EVENT_BLUETOOTH_NOT_SUPPORT | Emits when device not support bluetooth(android only) |
+| Name/KEY                    | DESCRIPTION                                            |
+| --------------------------- | ------------------------------------------------------ |
+| EVENT_DEVICE_ALREADY_PAIRED | Emits the devices array already paired                 |
+| EVENT_DEVICE_DISCOVER_DONE  | Emits when the scan done                               |
+| EVENT_DEVICE_FOUND          | Emits when device found during scan                    |
+| EVENT_CONNECTION_LOST       | Emits when device connection lost                      |
+| EVENT_UNABLE_CONNECT        | Emits when error occurs while trying to connect device |
+| EVENT_CONNECTED             | Emits when device connected                            |
+| EVENT_BLUETOOTH_NOT_SUPPORT | Emits when device not support bluetooth(android only)  |
 
 ### BluetoothTscPrinter ###
 The printer for label printing.
@@ -227,43 +227,43 @@ BluetoothTscPrinter.printLabel(options)
             the text print start position-y
         * fonttype
             the font type of the text, constanst of BluetoothTscPrinter.FONTTYPE,refereces as table:
-                | CONSTANTS | VALUE   |
-                |---|---|
-                |FONT_1| "1"|
-                |FONT_2| "2"|
-                |FONT_3| "3"|
-                |FONT_4| "4"|
-                |FONT_5| "5"|
-                |FONT_6| "6"|
-                |FONT_7| "7"|
-                |FONT_8|"8"|
-                |SIMPLIFIED_CHINESE| "TSS24.BF2"|
-                |TRADITIONAL_CHINESE| "TST24.BF2"|
-                |KOREAN| "K"|
+                | CONSTANTS           | VALUE       |
+                | ------------------- | ----------- |
+                | FONT_1              | "1"         |
+                | FONT_2              | "2"         |
+                | FONT_3              | "3"         |
+                | FONT_4              | "4"         |
+                | FONT_5              | "5"         |
+                | FONT_6              | "6"         |
+                | FONT_7              | "7"         |
+                | FONT_8              | "8"         |
+                | SIMPLIFIED_CHINESE  | "TSS24.BF2" |
+                | TRADITIONAL_CHINESE | "TST24.BF2" |
+                | KOREAN              | "K"         |
         * rotation
             the rotation of the text, constants of the BluetoothTscPrinter.ROTATION, referces as table:
-                   | CONSTANTS | VALUE   |
-                   |---|---|
-                   |ROTATION_0| 0|
-                   |ROTATION_90| 90|
-                   |ROTATION_180| 180|
-                   |ROTATION_270| 270|
+                   | CONSTANTS    | VALUE |
+                   | ------------ | ----- |
+                   | ROTATION_0   | 0     |
+                   | ROTATION_90  | 90    |
+                   | ROTATION_180 | 180   |
+                   | ROTATION_270 | 270   |
         * xscal
             the scal in x,
         * yscal
             the scal in y, xscal/yscal is the constants of the BluetoothTscPrinter.FONTMUL, referces as table:
-             | CONSTANTS | VALUE   |
-             |---|---|
-             |MUL_1| 1|
-             |MUL_2| 2|
-             |MUL_3| 3|
-             |MUL_4| 4|
-             |MUL_5| 5|
-             |MUL_6| 6|
-             |MUL_7| 7|
-             |MUL_8| 8|
-             |MUL_9| 9|
-             |MUL_10: 10|
+             | CONSTANTS  | VALUE |
+             | ---------- | ----- |
+             | MUL_1      | 1     |
+             | MUL_2      | 2     |
+             | MUL_3      | 3     |
+             | MUL_4      | 4     |
+             | MUL_5      | 5     |
+             | MUL_6      | 6     |
+             | MUL_7      | 7     |
+             | MUL_8      | 8     |
+             | MUL_9      | 9     |
+             | MUL_10: 10 |
 
 ##### qrcode #####
     the collection of qrcodes to print, contains following fields as the configuration:
@@ -275,12 +275,12 @@ BluetoothTscPrinter.printLabel(options)
             the print start position at y
         * level
             the error correction level, constants of BluetoothTscPrinter.EEC, referces as tables:
-            | CONSTANTS | VALUE   |
-            |---|---|
-            |LEVEL_L|"L"|
-            |LEVEL_M| "M"|
-            |LEVEL_Q| "Q"|
-            |LEVEL_H| "H"|
+            | CONSTANTS | VALUE |
+            | --------- | ----- |
+            | LEVEL_L   | "L"   |
+            | LEVEL_M   | "M"   |
+            | LEVEL_Q   | "Q"   |
+            | LEVEL_H   | "H"   |
         * width
             the qrcode size (width X width),since the qrcode are square normally, so we just config the width.
 
@@ -295,37 +295,37 @@ BluetoothTscPrinter.printLabel(options)
         the print start position of y,
       * type
         the barcode type, constants of BluetoothTscPrinter, definition as table:
-        | CONSTRANTS | VALUE |
-        |---|---|
-        | CODE128 | "128" |
-        | CODE128M | "128M" |
-        | EAN128 | "EAN128" |
-        | ITF25 | "25" |
-        | ITF25C | "25C" |
-        | CODE39 | "39" |
-        | CODE39C | "39C" |
-        | CODE39S | "39S" |
-        | CODE93 | "93" |
-        | EAN13 | "EAN13" |
-        | EAN13_2 | "EAN13+2" |
-        | EAN13_5 | "EAN13+5" |
-        | EAN8 | "EAN8" |
-        | EAN8_2 | "EAN8+2" |
-        | EAN8_5 | "EAN8+5" |
-        | CODABAR | "CODA" |
-        | POST | "POST" |
-        | UPCA | "EAN13" |
-        | UPCA_2 | "EAN13+2" |
-        | UPCA_5 | "EAN13+5" |
-        | UPCE | "EAN13" |
-        | UPCE_2 | "EAN13+2" |
-        | UPCE_5 | "EAN13+5" |
-        | CPOST | "CPOST" |
-        | MSI | "MSI" |
-        | MSIC | "MSIC" |
-        | PLESSEY | "PLESSEY" |
-        | ITF14 | "ITF14" |
-        | EAN14 | "EAN14" |
+        | CONSTRANTS | VALUE     |
+        | ---------- | --------- |
+        | CODE128    | "128"     |
+        | CODE128M   | "128M"    |
+        | EAN128     | "EAN128"  |
+        | ITF25      | "25"      |
+        | ITF25C     | "25C"     |
+        | CODE39     | "39"      |
+        | CODE39C    | "39C"     |
+        | CODE39S    | "39S"     |
+        | CODE93     | "93"      |
+        | EAN13      | "EAN13"   |
+        | EAN13_2    | "EAN13+2" |
+        | EAN13_5    | "EAN13+5" |
+        | EAN8       | "EAN8"    |
+        | EAN8_2     | "EAN8+2"  |
+        | EAN8_5     | "EAN8+5"  |
+        | CODABAR    | "CODA"    |
+        | POST       | "POST"    |
+        | UPCA       | "EAN13"   |
+        | UPCA_2     | "EAN13+2" |
+        | UPCA_5     | "EAN13+5" |
+        | UPCE       | "EAN13"   |
+        | UPCE_2     | "EAN13+2" |
+        | UPCE_5     | "EAN13+5" |
+        | CPOST      | "CPOST"   |
+        | MSI        | "MSI"     |
+        | MSIC       | "MSIC"    |
+        | PLESSEY    | "PLESSEY" |
+        | ITF14      | "ITF14"   |
+        | EAN14      | "EAN14"   |
 
      * height
       the height of the barcode.
@@ -507,3 +507,5 @@ await BluetoothEscposPrinter.printerAlign(BluetoothEscposPrinter.ALIGN.LEFT);
 ```javascript
 BluetoothEscposPrinter.opendDrawer(0, 250, 250);
 ```
+
+
