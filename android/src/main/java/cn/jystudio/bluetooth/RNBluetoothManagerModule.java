@@ -127,8 +127,7 @@ public class RNBluetoothManagerModule extends ReactContextBaseJavaModule
         }else if (!adapter.isEnabled()) {
             // If Bluetooth is not on, request that it be enabled.
             // setupChat() will then be called during onActivityResult
-            Intent enableIntent = new Intent(
-                    BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             promiseMap.put(PROMISE_ENABLE_BT, promise);
             this.reactContext.startActivityForResult(enableIntent, REQUEST_ENABLE_BT, Bundle.EMPTY);
         } else {
@@ -141,10 +140,10 @@ public class RNBluetoothManagerModule extends ReactContextBaseJavaModule
                     obj.put("address", d.getAddress());
                     pairedDeivce.pushString(obj.toString());
                 } catch (Exception e) {
-                    //ignore.
+                    Log.e(TAG, "Error creating JSON object for paired device", e);
                 }
             }
-            Log.d(TAG, "ble Enabled");
+            Log.d(TAG, "Bluetooth Enabled");
             promise.resolve(pairedDeivce);
         }
     }
@@ -328,54 +327,57 @@ public class RNBluetoothManagerModule extends ReactContextBaseJavaModule
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
         BluetoothAdapter adapter = this.getBluetoothAdapter();
         Log.d(TAG, "onActivityResult " + resultCode);
+        
         switch (requestCode) {
             case REQUEST_CONNECT_DEVICE: {
-                // When DeviceListActivity returns with a device to connect
-                if (resultCode == Activity.RESULT_OK) {
-                    // Get the device MAC address
-                    String address = data.getExtras().getString(
-                            EXTRA_DEVICE_ADDRESS);
-                    // Get the BLuetoothDevice object
-                    if (adapter!=null && BluetoothAdapter.checkBluetoothAddress(address)) {
-                        BluetoothDevice device = adapter
-                                .getRemoteDevice(address);
-                        // Attempt to connect to the device
-                        mService.connect(device);
-                    }
-                }
+                Log.d(TAG, "onActivityResult REQUEST_CONNECT_DEVICE");
+                handleDeviceConnectionResult(resultCode, data, adapter);
                 break;
             }
             case REQUEST_ENABLE_BT: {
-                Promise promise = promiseMap.remove(PROMISE_ENABLE_BT);
-                // When the request to enable Bluetooth returns
-                if (resultCode == Activity.RESULT_OK && promise != null) {
-                    // Bluetooth is now enabled, so set up a session
-                    if(adapter!=null){
-                        WritableArray pairedDeivce =Arguments.createArray();
-                        Set<BluetoothDevice> boundDevices = adapter.getBondedDevices();
-                        for (BluetoothDevice d : boundDevices) {
-                            try {
-                                JSONObject obj = new JSONObject();
-                                obj.put("name", d.getName());
-                                obj.put("address", d.getAddress());
-                                pairedDeivce.pushString(obj.toString());
-                            } catch (Exception e) {
-                                //ignore.
-                            }
-                        }
-                        promise.resolve(pairedDeivce);
-                    } else {
-                        promise.resolve(null);
-                    }
+                Log.d(TAG, "onActivityResult REQUEST_ENABLE_BT");
+                handleBluetoothEnableResult(resultCode, adapter);
+                break;
+            }
+        }
+    }
 
-                } else {
-                    // User did not enable Bluetooth or an error occured
-                    Log.d(TAG, "BT not enabled: on activity result");
-                    if (promise != null) {
-                        promise.reject("ERR", new Exception("BT NOT ENABLED: on activity result"));
+    private void handleDeviceConnectionResult(int resultCode, Intent data, BluetoothAdapter adapter) {
+        if (resultCode == Activity.RESULT_OK) {
+            String address = data.getExtras().getString(EXTRA_DEVICE_ADDRESS);
+            if (adapter != null && BluetoothAdapter.checkBluetoothAddress(address)) {
+                BluetoothDevice device = adapter.getRemoteDevice(address);
+                mService.connect(device);
+            }
+        }
+    }
+
+    private void handleBluetoothEnableResult(int resultCode, BluetoothAdapter adapter) {
+        Promise promise = promiseMap.remove(PROMISE_ENABLE_BT);
+
+        if (resultCode == Activity.RESULT_OK && promise != null) {
+            if (adapter != null) {
+                WritableArray pairedDevices = Arguments.createArray();
+                Set<BluetoothDevice> bondedDevices = adapter.getBondedDevices();
+                for (BluetoothDevice d : bondedDevices) {
+                    try {
+                        JSONObject obj = new JSONObject();
+                        obj.put("name", d.getName());
+                        obj.put("address", d.getAddress());
+                        pairedDevices.pushString(obj.toString());
+                    } catch (JSONException e) {
+                        Log.e(TAG, "Error creating JSON object for paired device", e);
                     }
                 }
-                break;
+                promise.resolve(pairedDevices);
+            } else {
+                Log.d(TAG, "Adapter is null");
+                promise.resolve(null);
+            }
+        } else {
+            Log.d(TAG, "Bluetooth not enabled: onActivityResult");
+            if (promise != null) {
+                promise.reject("ERR", new Exception("Bluetooth not enabled: onActivityResult"));
             }
         }
     }
