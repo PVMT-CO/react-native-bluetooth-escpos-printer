@@ -218,7 +218,7 @@ public class RNBluetoothManagerModule extends ReactContextBaseJavaModule
             promiseMap.put(PROMISE_CONNECT, promise);
             mService.connect(device);
         } else {
-            promise.reject("BT NOT ENABLED");
+            promise.reject("BT NOT ENABLED: on connect");
         }
 
     }
@@ -235,7 +235,7 @@ public class RNBluetoothManagerModule extends ReactContextBaseJavaModule
             }
             promise.resolve(address);
         } else {
-            promise.reject("BT NOT ENABLED");
+            promise.reject("BT NOT ENABLED: on disconnect");
         }
 
 	}
@@ -248,7 +248,7 @@ public class RNBluetoothManagerModule extends ReactContextBaseJavaModule
             this.unpairDevice(device);
             promise.resolve(address);
         } else {
-            promise.reject("BT NOT ENABLED");
+            promise.reject("BT NOT ENABLED: on unpaire");
         }
 
     }
@@ -370,9 +370,9 @@ public class RNBluetoothManagerModule extends ReactContextBaseJavaModule
 
                 } else {
                     // User did not enable Bluetooth or an error occured
-                    Log.d(TAG, "BT not enabled");
+                    Log.d(TAG, "BT not enabled: on activity result");
                     if (promise != null) {
-                        promise.reject("ERR", new Exception("BT NOT ENABLED"));
+                        promise.reject("ERR", new Exception("BT NOT ENABLED: on activity result"));
                     }
                 }
                 break;
