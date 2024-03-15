@@ -51,7 +51,6 @@ public class RNBluetoothManagerModule extends ReactContextBaseJavaModule
     private static final int REQUEST_ENABLE_BT = 2;
     private static final int REQUEST_ACCESS_FINE_LOCATION_PERMISSION = 1;
 
-
     public static final int MESSAGE_STATE_CHANGE = BluetoothService.MESSAGE_STATE_CHANGE;
     public static final int MESSAGE_READ = BluetoothService.MESSAGE_READ;
     public static final int MESSAGE_WRITE = BluetoothService.MESSAGE_WRITE;
@@ -188,13 +187,13 @@ public class RNBluetoothManagerModule extends ReactContextBaseJavaModule
             promise.reject(EVENT_BLUETOOTH_NOT_SUPPORT, "Bluetooth not supported");
         } else {
             cancelDiscovery();
-            int permissionChecked = ContextCompat.checkSelfPermission(reactContext, android.Manifest.permission.ACCESS_FINE_LOCATION);
-            if (permissionChecked == PackageManager.PERMISSION_DENIED) {
-                Log.d(TAG, "D: Permission ACCESS_FINE_LOCATION denied, requesting permission...");
-                ActivityCompat.requestPermissions(reactContext.getCurrentActivity(),
-                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                        REQUEST_ACCESS_FINE_LOCATION_PERMISSION);
-            }
+            // int permissionChecked = ContextCompat.checkSelfPermission(reactContext, android.Manifest.permission.ACCESS_FINE_LOCATION);
+            // if (permissionChecked == PackageManager.PERMISSION_DENIED) {
+            //     Log.d(TAG, "D: Permission ACCESS_FINE_LOCATION denied, requesting permission...");
+            //     ActivityCompat.requestPermissions(reactContext.getCurrentActivity(),
+            //             new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+            //             REQUEST_ACCESS_FINE_LOCATION_PERMISSION);
+            // }
 
             pairedDevice = new JSONArray();
             foundDevice = new JSONArray();
