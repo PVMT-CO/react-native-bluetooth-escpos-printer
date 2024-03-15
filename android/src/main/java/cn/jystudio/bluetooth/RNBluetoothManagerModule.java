@@ -68,7 +68,7 @@ public class RNBluetoothManagerModule extends ReactContextBaseJavaModule
     private static final String PROMISE_SCAN = "SCAN";
     private static final String PROMISE_CONNECT = "CONNECT";
 
-    private JSONArray pairedDeivce = new JSONArray();
+    private JSONArray pairedDevice = new JSONArray();
     private JSONArray foundDevice = new JSONArray();
     // Name of the connected device
     private String mConnectedDeviceName = null;
@@ -133,20 +133,20 @@ public class RNBluetoothManagerModule extends ReactContextBaseJavaModule
             promiseMap.put(PROMISE_ENABLE_BT, promise);
             this.reactContext.startActivityForResult(enableIntent, REQUEST_ENABLE_BT, Bundle.EMPTY);
         } else {
-            WritableArray pairedDeivce =Arguments.createArray();
+            WritableArray pairedDevice =Arguments.createArray();
             Set<BluetoothDevice> boundDevices = adapter.getBondedDevices();
             for (BluetoothDevice d : boundDevices) {
                 try {
                     JSONObject obj = new JSONObject();
                     obj.put("name", d.getName());
                     obj.put("address", d.getAddress());
-                    pairedDeivce.pushString(obj.toString());
+                    pairedDevice.pushString(obj.toString());
                 } catch (Exception e) {
                     Log.e(TAG, "Error creating JSON object for paired device", e);
                 }
             }
             Log.d(TAG, "Bluetooth Enabled");
-            promise.resolve(pairedDeivce);
+            promise.resolve(pairedDevice);
         }
     }
 
@@ -271,7 +271,7 @@ public class RNBluetoothManagerModule extends ReactContextBaseJavaModule
     /*
     // Constants that indicate the current connection state
     public static final int STATE_NONE = 0;       // we're doing nothing
-    // public static final int STATE_LISTEN = 1;     // now listening for incoming connections //feathure removed.
+    // public static final int STATE_LISTEN = 1;     // now listening for incoming connections //feature removed.
     public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
 */
@@ -325,7 +325,7 @@ public class RNBluetoothManagerModule extends ReactContextBaseJavaModule
         }
     }
 
-    private void cancelDisCovery() {
+    private void cancelDiscovery() {
         try {
             BluetoothAdapter adapter = this.getBluetoothAdapter();
             if (adapter!=null && adapter.isDiscovering()) {
@@ -461,14 +461,14 @@ public class RNBluetoothManagerModule extends ReactContextBaseJavaModule
                     JSONObject result = null;
                     try {
                         result = new JSONObject();
-                        result.put("paired", pairedDeivce);
+                        result.put("paired", pairedDevice);
                         result.put("found", foundDevice);
                         promise.resolve(result.toString());
                     } catch (Exception e) {
                         //ignore
                     }
                     WritableMap params = Arguments.createMap();
-                    params.putString("paired", pairedDeivce.toString());
+                    params.putString("paired", pairedDevice.toString());
                     params.putString("found", foundDevice.toString());
                     emitRNEvent(EVENT_DEVICE_DISCOVER_DONE, params);
                 }
