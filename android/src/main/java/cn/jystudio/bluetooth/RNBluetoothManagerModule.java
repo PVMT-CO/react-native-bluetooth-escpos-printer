@@ -113,6 +113,7 @@ public class RNBluetoothManagerModule extends ReactContextBaseJavaModule
         }
         // If the adapter is null, then Bluetooth is not supported
         if (mBluetoothAdapter == null) {
+            Log.d(TAG, "D: Bluetooth adapter is null. Bluetooth not supported.");
             emitRNEvent(EVENT_BLUETOOTH_NOT_SUPPORT,  Arguments.createMap());
         }
 
@@ -167,53 +168,57 @@ public class RNBluetoothManagerModule extends ReactContextBaseJavaModule
         BluetoothAdapter adapter = this.getBluetoothAdapter();
         if (adapter != null) {
             boolean isEnabled = adapter.isEnabled();
-            Log.d(TAG, "Bluetooth adapter value: " + adapter);
-            Log.d(TAG, "Bluetooth enabled status: " + isEnabled);
+            Log.d(TAG, "D: Bluetooth adapter value: " + adapter);
+            Log.d(TAG, "D: Bluetooth enabled status: " + isEnabled);
             promise.resolve(isEnabled);
         } else {
-            Log.d(TAG, "Bluetooth adapter is null");
+            Log.d(TAG, "D: Bluetooth adapter is null");
             promise.reject("BLUETOOTH_ADAPTER_NULL", "Bluetooth adapter is null");
         }
     }
 
     @ReactMethod
     public void scanDevices(final Promise promise) {
-        Log.d(TAG, "called scanDevices");
+        Log.d(TAG, "D: called scanDevices");
         BluetoothAdapter adapter = this.getBluetoothAdapter();
         if(adapter == null){
-            promise.reject(EVENT_BLUETOOTH_NOT_SUPPORT);
-        }else {
-            cancelDisCovery();
+            Log.d(TAG, "D: Bluetooth adapter is null. Bluetooth not supported.");
+            promise.reject(EVENT_BLUETOOTH_NOT_SUPPORT, "Bluetooth not supported");
+        } else {
+            cancelDiscovery();
             int permissionChecked = ContextCompat.checkSelfPermission(reactContext, android.Manifest.permission.ACCESS_FINE_LOCATION);
             if (permissionChecked == PackageManager.PERMISSION_DENIED) {
-                // // TODO: 2018/9/21
+                Log.d(TAG, "D: Permission ACCESS_FINE_LOCATION denied, requesting permission...");
                 ActivityCompat.requestPermissions(reactContext.getCurrentActivity(),
                         new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                        1);
+                        REQUEST_ACCESS_FINE_LOCATION_PERMISSION);
             }
 
-
-            pairedDeivce = new JSONArray();
+            pairedDevice = new JSONArray();
             foundDevice = new JSONArray();
-            Set<BluetoothDevice> boundDevices = adapter.getBondedDevices();
-            for (BluetoothDevice d : boundDevices) {
+            Set<BluetoothDevice> bondedDevices = adapter.getBondedDevices();
+            for (BluetoothDevice device : bondedDevices) {
                 try {
                     JSONObject obj = new JSONObject();
-                    obj.put("name", d.getName());
-                    obj.put("address", d.getAddress());
-                    pairedDeivce.put(obj);
-                } catch (Exception e) {
-                    //ignore.
+                    obj.put("name", device.getName());
+                    obj.put("address", device.getAddress());
+                    pairedDevice.put(obj);
+                } catch (JSONException e) {
+                    Log.e(TAG, "E: Error while creating JSON object for paired device", e);
+                    // Ignore and continue
                 }
             }
 
             WritableMap params = Arguments.createMap();
-            params.putString("devices", pairedDeivce.toString());
+            params.putString("devices", pairedDevice.toString());
             emitRNEvent(EVENT_DEVICE_ALREADY_PAIRED, params);
+
             if (!adapter.startDiscovery()) {
-                promise.reject("DISCOVER", "NOT_STARTED");
-                cancelDisCovery();
+                Log.d(TAG, "D: Discovery not started");
+                promise.reject("DISCOVER", "Discovery not started");
+                cancelDiscovery();
             } else {
+                Log.d(TAG, "D: Discovery started");
                 promiseMap.put(PROMISE_SCAN, promise);
             }
         }
