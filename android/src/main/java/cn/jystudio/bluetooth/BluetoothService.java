@@ -342,7 +342,15 @@ public class BluetoothService {
 
         public void cancel() {
             try {
-                mmSocket.close();
+                // Guard against NullPointerException: mmSocket can be null if
+                // the ConnectThread failed before assigning the socket, or if
+                // cancel() is invoked a second time after connectionLost()
+                // already tore the connection down. Both scenarios are common
+                // when the remote device (e.g. a thermal printer) is powered
+                // off mid-session.
+                if (mmSocket != null) {
+                    mmSocket.close();
+                }
                 connectionLost();
             } catch (IOException e) {
                 Log.e(TAG, "close() of connect socket failed", e);
